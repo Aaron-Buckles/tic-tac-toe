@@ -49,7 +49,6 @@ function resetGame() {
 }
 
 function handleClick(e) {
-	alert('Click');
 	if (mouseInCanvas) {
 		getMousePosition(e);
 		var mouseGridX = getMouseGridPos()[0];

@@ -45,10 +45,11 @@ function resetGame() {
 	xTurn = true;
 	gameOver = false;
 
-	title.innerHTML = "Tic Tac Toe"
+	title.innerHTML = 'Tic Tac Toe';
 }
 
 function handleClick(e) {
+	alert('Click');
 	if (mouseInCanvas) {
 		getMousePosition(e);
 		var mouseGridX = getMouseGridPos()[0];

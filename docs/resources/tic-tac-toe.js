@@ -53,11 +53,18 @@ function handleClick(e) {
 		getMousePosition(e);
 		var mouseGridX = getMouseGridPos()[0];
 		var mouseGridY = getMouseGridPos()[1];
-		// console.log("Click at (" + mouseGridX + ", " + mouseGridY + ")");
+
 		if (board[mouseGridY][mouseGridX] == ' ' && gameOver == false) {
 			board[mouseGridY][mouseGridX] = (xTurn) ? 'X' : "O";
-			checkForWin(mouseGridX, mouseGridY);
-			xTurn = !xTurn;
+			if (checkForWin(mouseGridX, mouseGridY)) {
+				title.innerHTML = ((xTurn) ? 'X': 'O') + " Wins";
+				gameOver = true;
+			} else if (checkForScratch()) {
+				title.innerHTML = 'Scratch';
+				gameOver = true;
+			} else {
+				xTurn = !xTurn;
+			}
 		}
 	}
 }
@@ -101,6 +108,17 @@ function getMouseGridPos() {
 	return [mouseGridX, mouseGridY];
 }
 
+function checkForScratch() {
+	for (var i = 0; i < board.length; i++) {
+		for (var j = 0; j < board[i].length; j++) {
+			if (board[i][j] == ' ') {
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
 function checkForWin(mouseGridX, mouseGridY) {
 	var currentPlayer = (xTurn) ? 'X' : 'O';
 	
@@ -129,11 +147,11 @@ function checkForWin(mouseGridX, mouseGridY) {
 				break;
 			}
 			if (j == 1) {
-				title.innerHTML = ((xTurn) ? 'X': 'O') + " Wins";
-				gameOver = true;
+				return true;
 			}
 		}
 	}
+	return false;
 }
 
 function drawPlayer(gridPosition, player=null) {

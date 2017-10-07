@@ -15,7 +15,7 @@ xImage.src = "resources/images/x.png";
 var oImage = new Image();
 oImage.src = "resources/images/o.png";
 
-var board;
+var currentBoard;
 var xTurn;
 var gameOver = false;
 
@@ -38,9 +38,7 @@ function resizeCanvas(resize=false) {
 }
 
 function resetGame() {
-	board = [[' ', ' ', ' '],
-			 [' ', ' ', ' '],
-			 [' ', ' ', ' ']];
+	currentBoard = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']];
 
 	xTurn = true;
 	gameOver = false;
@@ -54,12 +52,14 @@ function handleClick(e) {
 		var mouseGridX = getMouseGridPos()[0];
 		var mouseGridY = getMouseGridPos()[1];
 
-		if (board[mouseGridY][mouseGridX] == ' ' && gameOver == false) {
-			board[mouseGridY][mouseGridX] = (xTurn) ? 'X' : "O";
-			if (checkForWin(mouseGridX, mouseGridY)) {
-				title.innerHTML = ((xTurn) ? 'X': 'O') + " Wins";
+		if (currentBoard[mouseGridY][mouseGridX] == ' ' && gameOver == false) {
+			var currentPlayer = (xTurn) ? 'X' : 'O';
+			currentBoard[mouseGridY][mouseGridX] = currentPlayer
+
+			if (checkForWin(mouseGridX, mouseGridY, currentBoard, currentPlayer)) {
+				title.innerHTML = currentPlayer + " Wins";
 				gameOver = true;
-			} else if (checkForScratch()) {
+			} else if (checkForScratch(currentBoard)) {
 				title.innerHTML = 'Scratch';
 				gameOver = true;
 			} else {
@@ -108,7 +108,7 @@ function getMouseGridPos() {
 	return [mouseGridX, mouseGridY];
 }
 
-function checkForScratch() {
+function checkForScratch(board) {
 	for (var i = 0; i < board.length; i++) {
 		for (var j = 0; j < board[i].length; j++) {
 			if (board[i][j] == ' ') {
@@ -119,9 +119,7 @@ function checkForScratch() {
 	return true;
 }
 
-function checkForWin(mouseGridX, mouseGridY) {
-	var currentPlayer = (xTurn) ? 'X' : 'O';
-	
+function checkForWin(gridX, gridY, board, currentPlayer) {
 	var winOffsets = [[[1, 0], [2, 0]],
 					  [[-1, 0], [-2, 0]],
 					  [[-1, 0], [1, 0]],
@@ -136,8 +134,8 @@ function checkForWin(mouseGridX, mouseGridY) {
 
 	for (var i = 0; i < winOffsets.length; i++) {
 		for (var j = 0; j < winOffsets[i].length; j++) {
-			var x = winOffsets[i][j][0] + mouseGridX;
-			var y = winOffsets[i][j][1] + mouseGridY;
+			var x = winOffsets[i][j][0] + gridX;
+			var y = winOffsets[i][j][1] + gridY;
 
 			if (y in board && x in board[y]) {
 				if (board[y][x] != currentPlayer || x < 0 || y < 0) {
@@ -190,15 +188,15 @@ function drawLine(x1, y1, x2, y2, color="rgb(220, 220, 220)") {
 	ctx.stroke();
 }
 
-function drawBoard() {
+function drawCurrentBoard() {
 	drawLine(Math.floor(canvas.width/3), 0, Math.floor(canvas.width/3), canvas.height);
 	drawLine(Math.floor(2 * canvas.width/3), 0, Math.floor(2 * canvas.width/3), canvas.height);
 	drawLine(0, Math.floor(canvas.height/3), canvas.width, Math.floor(canvas.height/3));
 	drawLine(0, Math.floor(2 * canvas.height/3), canvas.width, Math.floor(2 * canvas.height/3));
 
-	for (var y = 0; y < board.length; y++) {
-		for (var x = 0; x < board[y].length; x++) {
-			drawPlayer([x, y], player=board[y][x]);
+	for (var y = 0; y < currentBoard.length; y++) {
+		for (var x = 0; x < currentBoard[y].length; x++) {
+			drawPlayer([x, y], player=currentBoard[y][x]);
 		}
 	}
 
@@ -206,7 +204,7 @@ function drawBoard() {
 		var mouseGridX = getMouseGridPos()[0];
 		var mouseGridY = getMouseGridPos()[1];
 
-		if (board[mouseGridY][mouseGridX] == ' ') {
+		if (currentBoard[mouseGridY][mouseGridX] == ' ') {
 			drawPlayer([mouseGridX, mouseGridY]);
 		}
 	}
@@ -215,7 +213,7 @@ function drawBoard() {
 function draw() {
 	resizeCanvas();
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	drawBoard();
+	drawCurrentBoard();
 }
 
 resetGame();

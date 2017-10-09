@@ -1,6 +1,7 @@
-// BIG TODO: The game assumes that the ai will always be O
-
 var title = document.getElementById("game-title");
+var firstMoveButton = document.getElementById('first-move-button');
+var aiOnButton = document.getElementById('ai-on-button');
+
 var canvas = document.getElementById("game-canvas");
 var ctx = canvas.getContext("2d");
 
@@ -23,9 +24,39 @@ var gameOver = false;
 
 var aiOn = false;
 var aiPlayer = 'O';
+var humanBegin = true;
 
+firstMoveButton.disabled = true;
 document.addEventListener("mousemove", getMousePosition, false);
 document.addEventListener("click", handleClick, false);
+
+function turnAiOn() {
+	aiOn = !aiOn;
+
+	if (aiOn) {
+		aiOnButton.innerHTML = 'AI:  ON';
+		firstMoveButton.disabled = false;
+	} else {
+		aiOnButton.innerHTML = 'AI: OFF';
+		firstMoveButton.disabled = true;
+	}
+
+	resetGame();
+}
+
+function changeFirstMove() {
+	humanBegin = !humanBegin;
+
+	if (humanBegin) {
+		firstMoveButton.innerHTML = 'First Move: You';
+		aiPlayer = 'O';
+	} else {
+		firstMoveButton.innerHTML = 'First Move: AI';
+		aiPlayer = 'X';
+	}
+
+	resetGame();
+}
 
 function deepcopyBoard(board) {
 	let newBoard = [];
@@ -116,6 +147,10 @@ function resetGame() {
 	gameOver = false;
 
 	title.innerHTML = 'Tic Tac Toe';
+
+	if (humanBegin == false) {
+		aiMove();
+	} 
 }
 
 function isGameOver(mouseGridX, mouseGridY, board, currentPlayer) {

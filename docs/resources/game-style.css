@@ -2,16 +2,18 @@ canvas{
 	background: rgba(0, 0, 0, 0); 
 	display: block;
 	margin: 10px auto; 
-	margin-top: 70px;
+	margin-top: 40px;
 	cursor: pointer;
 }
 
-#button-panel{
+.button-panel{
+	margin: 5px;
 	text-align: center;
 }
 
 .button-panel-control{
 	font-size: 12px;
+	font-family: "Roboto Mono", monospace;
 
 	color: white;
 	background-color: rgba(80, 80, 80, 0.6);
@@ -21,21 +23,26 @@ canvas{
 	transition: 0.2s;
 }
 
-.button-panel-control:hover{
+.button-panel-control:hover:enabled{
 	background-color: rgba(100, 100, 100, 0.6);
 	color: white;
 }
 
-.button-panel-control:active{
+.button-panel-control:active:enabled{
 	background-color: rgba(130, 130, 130, 0.6);
 	color: white;
 }
 
-.button-panel-control:focus{
+.button-panel-control:focus:enabled{
 	outline: 0;
 }
 
-#button-panel a{
+.button-panel a{
 	text-decoration: none;
 	font-size: 12px;
+}
+
+#first-move-button:disabled{
+	background-color: rgba(60, 60, 60, 0.6);
+	color: rgb(120, 120, 120);
 }

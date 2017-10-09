@@ -34,9 +34,11 @@
 <body>
 	<h1 id="game-title" class="title">Tic Tac Toe</h1>
 
-	<div id="button-panel">
+	<div class="button-panel">
 		<a class="button-panel-control" href="http://www.aaronbuckles.com/web-games.html">Back</a>
 		<button class="button-panel-control" onclick="resetGame()">New Game</button>
+		<pre><button id="ai-on-button" class="button-panel-control" onclick="turnAiOn()">AI: OFF</button></pre>
+		<pre><button id="first-move-button" class="button-panel-control" onclick="changeFirstMove()">First Move: You</button></pre>
 	</div>
 
 	<canvas id="game-canvas" width="600" height="600"></canvas>

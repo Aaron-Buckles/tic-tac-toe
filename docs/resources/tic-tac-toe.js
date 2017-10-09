@@ -1,3 +1,5 @@
+// BIG TODO: The game assumes that the ai will always be O
+
 var title = document.getElementById("game-title");
 var canvas = document.getElementById("game-canvas");
 var ctx = canvas.getContext("2d");
@@ -19,8 +21,78 @@ var currentBoard;
 var xTurn;
 var gameOver = false;
 
+var aiOn = false;
+var aiPlayer = 'O';
+
 document.addEventListener("mousemove", getMousePosition, false);
 document.addEventListener("click", handleClick, false);
+
+function deepcopyBoard(board) {
+	let newBoard = [];
+	for (let i = 0; i < board.length; i++) {
+		let newRow = [];
+		for (let j = 0; j < board[i].length; j++) {
+			newRow.push(board[i][j]);
+		}
+		newBoard.push(newRow);
+	}
+	return newBoard;
+}
+
+function getPossibleMoves(board, currentPlayer) {
+	let possibleMoves = []
+	for (let i = 0; i < board.length; i++) {
+		for (let j = 0; j < board[i].length; j++) {
+			if (board[i][j] == ' ') {
+				let copiedBoard = deepcopyBoard(board);
+				copiedBoard[i][j] = currentPlayer;
+				possibleMoves.push([copiedBoard, [j, i]]);
+			}
+		}
+	}
+	return possibleMoves;
+}
+
+function depthFirstSearch(rootBoard, currentTurn) {
+	let currentPlayer = (currentTurn) ? 'X' : 'O';
+	let moves = getPossibleMoves(rootBoard, currentPlayer);
+
+	for (let i = 0; i < moves.length; i++) {
+		let board = moves[i][0];
+		let moveX = moves[i][1][0];
+		let moveY = moves[i][1][1];
+
+		if (checkForWin(moveX, moveY, board)) {
+			return [currentPlayer, moveX, moveY];
+		} else if (checkForScratch(board)) {
+			return [null, moveX, moveY];
+		}
+	}
+
+	let ties = [];
+	let losses = [];
+
+	for (let i = 0; i < moves.length; i++) {
+		let board = moves[i][0];
+		let moveX = moves[i][1][0];
+		let moveY = moves[i][1][1];
+
+		let winner = depthFirstSearch(board, !currentTurn);
+		if (winner == currentPlayer) {
+			return [currentPlayer, moveX, moveY];
+		} else if (winner == null) {
+			ties.push([currentPlayer, moveX, moveY]);
+		} else if (winner != currentPlayer) {
+			losses.push([currentPlayer, moveX, moveY]);
+		}
+	}
+
+	if (ties.length > 0) {
+		return ties[Math.floor(Math.random() * ties.length)]
+	} else if (losses.length > 0) {
+		return losses[Math.floor(Math.random() * losses.length)]
+	}
+}
 
 function resizeCanvas(resize=false) {
 	if (windowWidth != window.innerWidth || windowHeight != window.innerHeight || resize) {
@@ -46,25 +118,55 @@ function resetGame() {
 	title.innerHTML = 'Tic Tac Toe';
 }
 
+function isGameOver(mouseGridX, mouseGridY, currentPlayer, board) {
+	if (checkForWin(mouseGridX, mouseGridY, board, currentPlayer)) {
+		title.innerHTML = currentPlayer + " Wins";
+		gameOver = true;
+	} else if (checkForScratch(board)) {
+		title.innerHTML = 'Scratch';
+		gameOver = true;
+	} else {
+		xTurn = !xTurn;
+	}
+}
+
+function aiMove() {
+	let currentPlayer = (xTurn) ? 'X' : 'O';
+	if (gameOver == false) {
+		let ai = depthFirstSearch(currentBoard, xTurn);
+		let aiMoveX = ai[1];
+		let aiMoveY = ai[2];
+		if (currentBoard[aiMoveY][aiMoveX] == ' ') {
+			currentBoard[aiMoveY][aiMoveX] = currentPlayer;
+			isGameOver(aiMoveX, aiMoveY, currentPlayer, currentBoard);
+		}
+	}
+}
+
+function makeMove(mouseGridX, mouseGridY) {
+	let currentPlayer = (xTurn) ? 'X' : 'O';
+	if (currentBoard[mouseGridY][mouseGridX] == ' ' && gameOver == false) {
+		currentBoard[mouseGridY][mouseGridX] = currentPlayer;
+		isGameOver(mouseGridX, mouseGridY, currentPlayer, currentBoard);
+
+		if (aiOn) {
+			aiMove();
+		}
+	}
+}
+
 function handleClick(e) {
 	if (mouseInCanvas) {
 		getMousePosition(e);
 		var mouseGridX = getMouseGridPos()[0];
 		var mouseGridY = getMouseGridPos()[1];
 
-		if (currentBoard[mouseGridY][mouseGridX] == ' ' && gameOver == false) {
-			var currentPlayer = (xTurn) ? 'X' : 'O';
-			currentBoard[mouseGridY][mouseGridX] = currentPlayer
-
-			if (checkForWin(mouseGridX, mouseGridY, currentBoard, currentPlayer)) {
-				title.innerHTML = currentPlayer + " Wins";
-				gameOver = true;
-			} else if (checkForScratch(currentBoard)) {
-				title.innerHTML = 'Scratch';
-				gameOver = true;
-			} else {
-				xTurn = !xTurn;
+		if (aiOn) {
+			if ((xTurn) ? 'X' : 'O' != aiPlayer) {
+				makeMove(mouseGridX, mouseGridY);
 			}
+		} else {
+			makeMove(mouseGridX, mouseGridY);
 		}
 	}
 }
@@ -204,8 +306,10 @@ function drawCurrentBoard() {
 		var mouseGridX = getMouseGridPos()[0];
 		var mouseGridY = getMouseGridPos()[1];
 
-		if (currentBoard[mouseGridY][mouseGridX] == ' ') {
-			drawPlayer([mouseGridX, mouseGridY]);
+		if (aiOn == false || (xTurn) ? 'X' : 'O' != aiPlayer) {
+			if (currentBoard[mouseGridY][mouseGridX] == ' ') {
+				drawPlayer([mouseGridX, mouseGridY]);
+			}
 		}
 	}
 }

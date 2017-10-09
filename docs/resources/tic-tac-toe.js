@@ -34,7 +34,7 @@ function turnAiOn() {
 	aiOn = !aiOn;
 
 	if (aiOn) {
-		aiOnButton.innerHTML = 'AI:  ON';
+		aiOnButton.innerHTML = 'AI: ON ';
 		firstMoveButton.disabled = false;
 	} else {
 		aiOnButton.innerHTML = 'AI: OFF';
@@ -51,7 +51,7 @@ function changeFirstMove() {
 		firstMoveButton.innerHTML = 'First Move: You';
 		aiPlayer = 'O';
 	} else {
-		firstMoveButton.innerHTML = 'First Move: AI';
+		firstMoveButton.innerHTML = 'First Move: AI ';
 		aiPlayer = 'X';
 	}
 

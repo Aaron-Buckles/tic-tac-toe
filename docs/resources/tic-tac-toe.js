@@ -62,7 +62,7 @@ function depthFirstSearch(rootBoard, currentTurn) {
 		let moveX = moves[i][1][0];
 		let moveY = moves[i][1][1];
 
-		if (checkForWin(moveX, moveY, board)) {
+		if (checkForWin(moveX, moveY, board, currentPlayer)) {
 			return [currentPlayer, moveX, moveY];
 		} else if (checkForScratch(board)) {
 			return [null, moveX, moveY];
@@ -77,13 +77,13 @@ function depthFirstSearch(rootBoard, currentTurn) {
 		let moveX = moves[i][1][0];
 		let moveY = moves[i][1][1];
 
-		let winner = depthFirstSearch(board, !currentTurn);
+		let winner = depthFirstSearch(board, !currentTurn)[0];
 		if (winner == currentPlayer) {
-			return [currentPlayer, moveX, moveY];
-		} else if (winner == null) {
-			ties.push([currentPlayer, moveX, moveY]);
+			return [winner, moveX, moveY];
+		} else if (winner === null) {
+			ties.push([winner, moveX, moveY]);
 		} else if (winner != currentPlayer) {
-			losses.push([currentPlayer, moveX, moveY]);
+			losses.push([winner, moveX, moveY]);
 		}
 	}
 
@@ -118,15 +118,13 @@ function resetGame() {
 	title.innerHTML = 'Tic Tac Toe';
 }
 
-function isGameOver(mouseGridX, mouseGridY, currentPlayer, board) {
+function isGameOver(mouseGridX, mouseGridY, board, currentPlayer) {
 	if (checkForWin(mouseGridX, mouseGridY, board, currentPlayer)) {
 		title.innerHTML = currentPlayer + " Wins";
 		gameOver = true;
 	} else if (checkForScratch(board)) {
 		title.innerHTML = 'Scratch';
 		gameOver = true;
-	} else {
-		xTurn = !xTurn;
 	}
 }
 
@@ -138,7 +136,8 @@ function aiMove() {
 		let aiMoveY = ai[2];
 		if (currentBoard[aiMoveY][aiMoveX] == ' ') {
 			currentBoard[aiMoveY][aiMoveX] = currentPlayer;
-			isGameOver(aiMoveX, aiMoveY, currentPlayer, currentBoard);
+			isGameOver(aiMoveX, aiMoveY, currentBoard, currentPlayer);
+			xTurn = !xTurn;
 		}
 	}
 }
@@ -147,7 +146,8 @@ function makeMove(mouseGridX, mouseGridY) {
 	let currentPlayer = (xTurn) ? 'X' : 'O';
 	if (currentBoard[mouseGridY][mouseGridX] == ' ' && gameOver == false) {
 		currentBoard[mouseGridY][mouseGridX] = currentPlayer;
-		isGameOver(mouseGridX, mouseGridY, currentPlayer, currentBoard);
+		isGameOver(mouseGridX, mouseGridY, currentBoard, currentPlayer);
+		xTurn = !xTurn;
 
 		if (aiOn) {
 			aiMove();
@@ -221,36 +221,40 @@ function checkForScratch(board) {
 	return true;
 }
 
-function checkForWin(gridX, gridY, board, currentPlayer) {
-	var winOffsets = [[[1, 0], [2, 0]],
-					  [[-1, 0], [-2, 0]],
-					  [[-1, 0], [1, 0]],
-					  [[0, 1], [0, 2]],
-					  [[0, -1], [0, -2]],
-					  [[0, -1], [0, 1]],
-					  [[1, 1], [2, 2]],
-					  [[-1, -1], [-2, -2]],
-					  [[1, -1], [2, -2]],
-					  [[-1, 1], [-2, 2]],
-					  [[-1, -1], [1, 1]]]; 
+function sum(numbers) {
+	let total = 0;
+	for (let i = 0; i < numbers.length; i++) {
+		total += numbers[i];
+	}
+	return total;
+}
 
-	for (var i = 0; i < winOffsets.length; i++) {
-		for (var j = 0; j < winOffsets[i].length; j++) {
-			var x = winOffsets[i][j][0] + gridX;
-			var y = winOffsets[i][j][1] + gridY;
+function checkForWin(gridX, gridY, board, player) {
+	let magicSquare = [[8, 1, 6], [3, 5, 7], [4, 9, 2]];
+	let magicBoard = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
 
-			if (y in board && x in board[y]) {
-				if (board[y][x] != currentPlayer || x < 0 || y < 0) {
-					break;
-				}
-			} else {
-				break;
-			}
-			if (j == 1) {
-				return true;
+	for (let i = 0; i < board.length; i++) {
+		for (let j = 0; j < board[i].length; j++) {
+			if (player == board[i][j]) {
+				magicBoard[i][j] = magicSquare[i][j];
 			}
 		}
 	}
+
+	let horizontal = magicBoard[gridY];
+	let vertical = [magicBoard[0][gridX], magicBoard[1][gridX], magicBoard[2][gridX]];
+	let diagonal1 = [magicBoard[0][0], magicBoard[1][1], magicBoard[2][2]];
+	let diagonal2 = [magicBoard[0][2], magicBoard[1][1], magicBoard[2][0]];
+
+	let winPatterns = [horizontal, vertical, diagonal1, diagonal2];
+
+	for (let i = 0; i < winPatterns.length; i++) {
+		let winPattern = winPatterns[i];
+		if (sum(winPattern) == 15) {
+			return true;
+		}
+	}
+
 	return false;
 }
 

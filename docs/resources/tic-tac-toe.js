@@ -148,7 +148,7 @@ function resetGame() {
 
 	title.innerHTML = 'Tic Tac Toe';
 
-	if (humanBegin == false) {
+	if (humanBegin == false && aiOn) {
 		aiMove();
 	} 
 }

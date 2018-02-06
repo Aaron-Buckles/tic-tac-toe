@@ -359,8 +359,6 @@ function draw() {
 	drawCurrentBoard();
 }
 
-window.onload(function(){
-	resetGame();
-	resizeCanvas(true);
-	setInterval(draw, 10);
-});
+resetGame();
+resizeCanvas(true);
+setInterval(draw, 10);

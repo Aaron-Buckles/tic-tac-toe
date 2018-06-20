@@ -1,46 +1,16 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Tic Tac Toe</title>
-	<link rel="shortcut icon" href="https://www.aaronbuckles.com/resources/favicons/favicon.ico">
-	<link rel="icon" sizes="16x16 32x32 64x64" href="https://www.aaronbuckles.com/resources/favicons/favicon.ico">
-	<link rel="icon" type="image/png" sizes="196x196" href="https://www.aaronbuckles.com/resources/favicons/favicon-192.png">
-	<link rel="icon" type="image/png" sizes="160x160" href="https://www.aaronbuckles.com/resources/favicons/favicon-160.png">
-	<link rel="icon" type="image/png" sizes="96x96" href="https://www.aaronbuckles.com/resources/favicons/favicon-96.png">
-	<link rel="icon" type="image/png" sizes="64x64" href="https://www.aaronbuckles.com/resources/favicons/favicon-64.png">
-	<link rel="icon" type="image/png" sizes="32x32" href="https://www.aaronbuckles.com/resources/favicons/favicon-32.png">
-	<link rel="icon" type="image/png" sizes="16x16" href="https://www.aaronbuckles.com/resources/favicons/favicon-16.png">
-	<link rel="apple-touch-icon" href="https://www.aaronbuckles.com/resources/favicons/favicon-57.png">
-	<link rel="apple-touch-icon" sizes="114x114" href="https://www.aaronbuckles.com/resources/favicons/favicon-114.png">
-	<link rel="apple-touch-icon" sizes="72x72" href="https://www.aaronbuckles.com/resources/favicons/favicon-72.png">
-	<link rel="apple-touch-icon" sizes="144x144" href="https://www.aaronbuckles.com/resources/favicons/favicon-144.png">
-	<link rel="apple-touch-icon" sizes="60x60" href="https://www.aaronbuckles.com/resources/favicons/favicon-60.png">
-	<link rel="apple-touch-icon" sizes="120x120" href="https://www.aaronbuckles.com/resources/favicons/favicon-120.png">
-	<link rel="apple-touch-icon" sizes="76x76" href="https://www.aaronbuckles.com/resources/favicons/favicon-76.png">
-	<link rel="apple-touch-icon" sizes="152x152" href="https://www.aaronbuckles.com/resources/favicons/favicon-152.png">
-	<link rel="apple-touch-icon" sizes="180x180" href="https://www.aaronbuckles.com/resources/favicons/favicon-180.png">
-	<meta name="msapplication-TileColor" content="#FFFFFF">
-	<meta name="msapplication-TileImage" content="https://www.aaronbuckles.com/resources/favicons/favicon-144.png">
-	<meta name="msapplication-config" content="https://www.aaronbuckles.com/resources/favicons/browserconfig.xml">
+---
+layout: default
+title: Aaron Buckles | Projects | Tic Tac Toe
+---
 
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<h1 id="game-title" class="title">Tic Tac Toe</h1>
+<div class="button-panel">
+	<a class="button-panel-control" href="https://www.aaronbuckles.com/projects.html">Back</a>
+	<button class="button-panel-control" onclick="resetGame()">New Game</button>
+	<pre><button id="ai-on-button" class="button-panel-control" onclick="turnAiOn()">AI: OFF</button></pre>
+	<pre><button id="first-move-button" class="button-panel-control" onclick="changeFirstMove()">First Move: You</button></pre>
+</div>
 
-	<link href="https://fonts.googleapis.com/css?family=Roboto+Mono|Roboto:400,400i" rel="stylesheet">
-	<link rel="stylesheet" type="text/css" href="https://aaronbuckles.com/resources/style.css">
-	<link rel="stylesheet" type="text/css" href="resources/game-style.css">
-</head>
-<body>
-	<h1 id="game-title" class="title">Tic Tac Toe</h1>
+<canvas id="game-canvas" width="600" height="600"></canvas>
 
-	<div class="button-panel">
-		<a class="button-panel-control" href="https://www.aaronbuckles.com/projects.html">Back</a>
-		<button class="button-panel-control" onclick="resetGame()">New Game</button>
-		<pre><button id="ai-on-button" class="button-panel-control" onclick="turnAiOn()">AI: OFF</button></pre>
-		<pre><button id="first-move-button" class="button-panel-control" onclick="changeFirstMove()">First Move: You</button></pre>
-	</div>
-
-	<canvas id="game-canvas" width="600" height="600"></canvas>
-
-	<script type="text/javascript" src="resources/tic-tac-toe.js"></script>
-</body>
-</html>
+<script type="text/javascript" src="resources/tic-tac-toe.js"></script>

@@ -6,6 +6,14 @@ canvas{
 	cursor: pointer;
 }
 
+html, body {
+	background: linear-gradient(to bottom right, #111, #333);
+}
+
+h1 {
+	text-align: center;	
+}
+
 .button-panel{
 	margin: 5px;
 	text-align: center;

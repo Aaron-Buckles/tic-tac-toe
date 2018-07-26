@@ -14,9 +14,9 @@ var maxSize = canvas.width;
 var minSize = 250;
 
 var xImage = new Image();
-xImage.src = "resources/images/x.png";
+xImage.src = "x.png";
 var oImage = new Image();
-oImage.src = "resources/images/o.png";
+oImage.src = "o.png";
 
 var currentBoard;
 var xTurn;
